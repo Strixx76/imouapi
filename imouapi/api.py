@@ -349,8 +349,9 @@ class ImouAPIClient:
         payload = {
             "deviceId": device_id,
             "enableType": enable_type,
-            "channelId": "0",
         }
+        if IMOU_SWITCHES_SCOPE[enable_type] in ["channel", "all"]:
+            payload["channelId"] = "0"
         # call the api
         return await self._async_call_api(api, payload)
 
@@ -366,8 +367,9 @@ class ImouAPIClient:
             "deviceId": device_id,
             "enableType": enable_type,
             "enable": value,
-            "channelId": "0",
         }
+        if IMOU_SWITCHES_SCOPE[enable_type] in ["channel", "all"]:
+            payload["channelId"] = "0"
         # call the api
         return await self._async_call_api(api, payload)
 
