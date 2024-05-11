@@ -190,6 +190,7 @@ class ImouAPIClient:
             response = await self._session.request("POST", url, json=body, timeout=self._timeout)
         except Exception as exception:
             raise ConnectionFailed(f"{exception}") from exception
+        _LOGGER.debug("API request '%s' was sent", api)
 
         # parse the response and look for errors
         response_status = response.status
@@ -221,6 +222,7 @@ class ImouAPIClient:
                 raise NotAuthorized(f"{error_message}")
             # if the access token is invalid or expired, reconnect
             if result_code == "TK1002":
+                _LOGGER.debug("Access token is invalid or expired - Reconnecting")
                 await self.async_reconnect()
                 response_data = await self._async_call_api(api, payload, is_connect_request)
                 return response_data

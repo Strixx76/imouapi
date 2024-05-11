@@ -411,7 +411,15 @@ class ImouDevice:
                 sensor_instances_array,
             ) in self._sensor_instances.items():
                 for sensor_instance in sensor_instances_array:
-                    await sensor_instance.async_update()
+                    try:
+                        await sensor_instance.async_update()
+                    except Exception as exception:  # pylint: disable=broad-except
+                        _LOGGER.error(
+                            "[%s] failed to update sensor %s: %s",
+                            self.get_name(),
+                            sensor_instance.get_name(),
+                            exception,
+                        )
         return True
 
     def to_string(self) -> str:
